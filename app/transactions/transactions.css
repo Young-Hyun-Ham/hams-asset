@@ -1,0 +1,36 @@
+.transactions-page .topbar { padding: 26px 30px; border: 1px solid #dfe3d8; border-radius: 20px; background: #fff; box-shadow: 0 10px 30px rgba(31, 35, 27, .05); }
+.transactions-page .topbar .eyebrow { color: #19734b; letter-spacing: .15em; }
+.transactions-page .transaction-form-card { padding: 0; overflow: hidden; border: 0; box-shadow: 0 16px 42px rgba(31, 35, 27, .1); }
+.transactions-page .transaction-form-card h2 { margin: 0; padding: 20px 25px; background: #20231d; color: #fff; font-size: 15px; }
+.transactions-page .transaction-form { padding: 24px 25px 27px; background: #fff; }
+.transactions-page .transaction-form > * { min-width: 0; }
+.transactions-page .transaction-form label span { color: #555b50; font-size: 11px; }
+.transactions-page .transaction-form input,
+.transactions-page .transaction-form select { height: 46px; border-color: #dfe2d9; background: #fafbf8; transition: border .15s ease, box-shadow .15s ease; }
+.transactions-page .transaction-form input,
+.transactions-page .transaction-form select { width: 100%; max-width: 100%; }
+.transactions-page .transaction-form input:focus,
+.transactions-page .transaction-form select:focus { outline: 0; border-color: #839b53; box-shadow: 0 0 0 3px #c8fb5838; background: #fff; }
+.transactions-page .transaction-form .asset-save { height: 48px; background: #20231d; color: #fff; }
+.transactions-page main > .page-card:last-child { padding: 28px; border: 0; box-shadow: 0 12px 35px rgba(31, 35, 27, .07); }
+.transactions-page .transaction-filter { min-width: 105px; padding-inline: 12px; outline: 0; }
+.transactions-page .transaction-ledger article { margin: 0 -8px; padding: 17px 12px; border-radius: 10px; transition: background .15s ease; }
+.transactions-page .transaction-ledger article:hover { background: #f7f8f3; }
+.transactions-page .ledger-type { padding-block: 7px; border-radius: 8px; }
+.transactions-page .transaction-ledger strong { padding: 7px 10px; border-radius: 8px; background: #f5f6f0; font-size: 12px; }
+@media (max-width: 1100px) {
+  .transactions-page .transaction-form { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 760px) {
+  .transactions-page .topbar { padding: 20px; }
+  .transactions-page .transaction-form { grid-template-columns: 1fr; padding: 20px; }
+  .transactions-page .transaction-form .wide { grid-column: auto; }
+  .transactions-page main > .page-card:last-child { padding: 20px 16px; }
+}
+@media (max-width: 520px) {
+  .transactions-page .topbar { display: grid; }
+  .transactions-page .topbar .add-button { width: 100%; }
+  .transactions-page .transaction-form { grid-template-columns: 1fr; padding: 18px 16px 22px; }
+  .transactions-page .transaction-form .wide { grid-column: auto; }
+  .transactions-page .transaction-ledger article { margin-inline: 0; }
+}

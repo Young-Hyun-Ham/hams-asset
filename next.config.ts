@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["@hams-fam/sso-client"],
   /* config options here */
   experimental: {
     agentFeedback: true,

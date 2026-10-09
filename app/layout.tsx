@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import AuthInitializer from "@/components/AuthInitializer";
+import { FeedbackProvider } from "@/components/FeedbackProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -11,7 +13,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="ko">
-      <body>{children}</body>
+      <body>
+        <FeedbackProvider>
+          <AuthInitializer />
+          {children}
+        </FeedbackProvider>
+      </body>
     </html>
   );
 }
