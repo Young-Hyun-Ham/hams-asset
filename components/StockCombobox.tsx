@@ -3,6 +3,7 @@
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { StockInstrument } from "@/lib/stock-catalog";
+import "./StockCombobox.css";
 
 type SearchResult = {
   items: StockInstrument[];

@@ -8,10 +8,13 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export function GET(request: NextRequest) {
-  const destination = request.nextUrl.searchParams.get("destination") === "services"
-    ? "/profile/services"
-    : "/profile";
-  const returnTo = normalizeReturnTo(request.nextUrl.searchParams.get("returnTo"));
+  const destination =
+    request.nextUrl.searchParams.get("destination") === "services"
+      ? "/profile/services"
+      : "/profile";
+  const returnTo = normalizeReturnTo(
+    request.nextUrl.searchParams.get("returnTo"),
+  );
   const profileUrl = new URL(destination, getSsoServerUrl());
   profileUrl.searchParams.set("client_id", getSsoClientId());
 

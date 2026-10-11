@@ -76,9 +76,17 @@ export default function AssetSettingsDrawer({ open, onClose, onAssetsChanged }: 
   const [holdings, setHoldings] = useState<HoldingDraft[]>([newHolding("initial")]);
   const [targetAmount, setTargetAmount] = useState("");
   const [monthlyContribution, setMonthlyContribution] = useState("");
+  const [regenerateOnAssetChange, setRegenerateOnAssetChange] = useState(false);
 
   const loadGoal = useCallback(async () => {
-    const response = await fetch("/api/goal", { cache: "no-store" });
+    const [response, settingsResponse] = await Promise.all([
+      fetch("/api/goal", { cache: "no-store" }),
+      fetch("/api/goal/ai-settings", { cache: "no-store" }),
+    ]);
+    if (settingsResponse.ok) {
+      const settingsResult = await settingsResponse.json() as { settings: { regenerateOnAssetChange: boolean } };
+      setRegenerateOnAssetChange(settingsResult.settings.regenerateOnAssetChange);
+    }
     if (!response.ok) return;
     const result = await response.json() as { goal: { targetAmount: number; monthlyContribution: number } | null };
     if (result.goal) {
@@ -86,6 +94,24 @@ export default function AssetSettingsDrawer({ open, onClose, onAssetsChanged }: 
       setMonthlyContribution(String(result.goal.monthlyContribution));
     }
   }, []);
+
+  const updateAiSetting = async (checked: boolean) => {
+    const previous = regenerateOnAssetChange;
+    setRegenerateOnAssetChange(checked);
+    try {
+      const response = await fetch("/api/goal/ai-settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ regenerateOnAssetChange: checked }),
+      });
+      const result = await response.json() as { error?: string };
+      if (!response.ok) throw new Error(result.error || "AI 자동 재분석 설정을 저장하지 못했습니다.");
+      snackbar({ message: checked ? "자산 변경 시 AI 자동 재분석을 사용합니다." : "AI 자동 재분석을 사용하지 않습니다.", tone: "success" });
+    } catch (reason) {
+      setRegenerateOnAssetChange(previous);
+      snackbar({ message: reason instanceof Error ? reason.message : "AI 자동 재분석 설정을 저장하지 못했습니다.", tone: "error" });
+    }
+  };
 
   const loadAssets = useCallback(async () => {
     setLoading(true);
@@ -333,6 +359,10 @@ export default function AssetSettingsDrawer({ open, onClose, onAssetsChanged }: 
 
           {tab === "goal" ? (
             <form className="asset-form" onSubmit={saveGoal}>
+              <label className="ai-auto-analysis-option">
+                <input type="checkbox" checked={regenerateOnAssetChange} onChange={(event) => void updateAiSetting(event.target.checked)} />
+                <span><strong>자산 변경 시 AI 맞춤 목표 방향 새로 생성</strong><small>자산 등록·삭제 후 목표 화면을 열면 다시 분석합니다.</small></span>
+              </label>
               <div className="asset-form-intro"><strong>자산 목표</strong><p>목표 금액과 매월 투자할 수 있는 금액을 설정해 주세요.</p></div>
               <label><span>목표 금액</span><input value={targetAmount} onChange={(event) => setTargetAmount(event.target.value.replace(/\D/g, "").slice(0, 15))} inputMode="numeric" placeholder="100000000" required />{targetAmount ? <small className="korean-money">{Number(targetAmount).toLocaleString("ko-KR")}원 · {koreanMoney(targetAmount)}</small> : null}</label>
               <label><span>월 투자 가능 금액</span><input value={monthlyContribution} onChange={(event) => setMonthlyContribution(event.target.value.replace(/\D/g, "").slice(0, 15))} inputMode="numeric" placeholder="1000000" required />{monthlyContribution ? <small className="korean-money">{Number(monthlyContribution).toLocaleString("ko-KR")}원 · {koreanMoney(monthlyContribution)}</small> : null}</label>
